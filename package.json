@@ -1,0 +1,32 @@
+{
+  "name": "listener-tracker",
+  "description": "Allows event listeners to be tracked for easy removal",
+  "keywords": [
+    "events",
+    "listeners",
+    "EventEmitter"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/raptorjs/listener-tracker.git"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/mocha --ui bdd --reporter spec ./test && node_modules/.bin/jshint lib/"
+  },
+  "author": "Patrick Steele-Idem <pnidem@gmail.com>",
+  "maintainers": [
+    "Patrick Steele-Idem <pnidem@gmail.com>",
+    "Phil Gates-Idem <phillip.idem@gmail.com>"
+  ],
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.1.0",
+    "jshint": "^2.5.0"
+  },
+  "license": "Apache License v2.0",
+  "main": "lib/listener-tracker.js",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "version": "1.0.0"
+}
