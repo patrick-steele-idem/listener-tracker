@@ -291,7 +291,7 @@ describe('listener-tracker' , function() {
         });
 
         expect(wrapped._listeners.length).to.equal(2);
-        ee.emit('destroy'); 
+        ee.emit('destroy');
         expect(wrapped._listeners.length).to.equal(0);
     });
 
@@ -321,9 +321,36 @@ describe('listener-tracker' , function() {
             });
 
         expect(tracker._subscribeToList.length).to.equal(2);
-        ee1.emit('destroy'); 
+        ee1.emit('destroy');
         expect(tracker._subscribeToList.length).to.equal(1);
-        
+
+    });
+
+    it('should auto-unsubscribe when target is destroyed', function() {
+
+
+        var tracker = listenerTracker.createTracker();
+        var ee = new EventEmitter();
+
+        var fooEvent = null;
+
+        tracker.subscribeTo(ee)
+            .on('foo', function() {
+                fooEvent = arguments;
+            });
+
+        ee.emit('foo', 'a', 'b');
+
+        expect(fooEvent[0]).to.equal('a');
+        expect(fooEvent[1]).to.equal('b');
+
+        fooEvent = null;
+
+        ee.emit('destroy');
+
+        ee.emit('foo', 'a', 'b');
+
+        expect(fooEvent).to.equal(null);
     });
 
 });
