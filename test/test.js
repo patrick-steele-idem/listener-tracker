@@ -339,6 +339,8 @@ describe('listener-tracker' , function() {
                 fooEvent = arguments;
             });
 
+        expect(ee.listeners('destroy').length).to.equal(1);
+
         ee.emit('foo', 'a', 'b');
 
         expect(fooEvent[0]).to.equal('a');
@@ -351,6 +353,22 @@ describe('listener-tracker' , function() {
         ee.emit('foo', 'a', 'b');
 
         expect(fooEvent).to.equal(null);
+    });
+
+    it('should provide option to not attach "destroy" listener on target', function() {
+
+
+        var tracker = listenerTracker.createTracker();
+        var ee = new EventEmitter();
+
+        var fooEvent = null;
+
+        tracker.subscribeTo(ee, {addDestroyListener: false})
+            .on('foo', function() {
+                fooEvent = arguments;
+            });
+
+        expect(ee.listeners('destroy').length).to.equal(0);
     });
 
 });
