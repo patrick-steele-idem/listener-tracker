@@ -371,4 +371,101 @@ describe('listener-tracker' , function() {
         expect(ee.listeners('destroy').length).to.equal(0);
     });
 
+    it('[SubscriptionTracker] should do proper cleanup when a wrapped EventEmitter has no more listeners', function() {
+        var tracker = listenerTracker.createTracker();
+
+        var ee = new EventEmitter();
+        var removed = false;
+
+        expect(tracker._subscribeToList.length).to.equal(0);
+
+        tracker.subscribeTo(ee, { addDestroyListener: false })
+            .once('removed', function() {
+                removed = true;
+            });
+
+        expect(tracker._subscribeToList.length).to.equal(1);
+        expect(removed).to.equal(false);
+
+        ee.emit('removed');
+
+        expect(removed).to.equal(true);
+
+        expect(tracker._subscribeToList.length).to.equal(0);
+    });
+
+    it('[EventEmitterWrapper] should do proper cleanup for a `once` event', function() {
+        var ee = new EventEmitter();
+
+        var eeWrapped = listenerTracker.wrap(ee);
+
+        expect(eeWrapped._listeners.length).to.equal(0);
+
+        var fooEmitted = false;
+
+        eeWrapped.once('foo', function() {
+            fooEmitted = true;
+        });
+
+        expect(eeWrapped._listeners.length).to.equal(1);
+
+        ee.emit('foo');
+
+        expect(eeWrapped._listeners.length).to.equal(0);
+    });
+
+    it('[EventEmitterWrapper] should allow a `once` event listener to be removed', function() {
+        var ee = new EventEmitter();
+
+        var eeWrapped = listenerTracker.wrap(ee);
+
+        expect(eeWrapped._listeners.length).to.equal(0);
+
+        var fooEmitted = false;
+
+        function fooListener() {
+            fooEmitted = true;
+        }
+
+        eeWrapped.once('foo', fooListener);
+
+        expect(eeWrapped._listeners.length).to.equal(1);
+
+
+        eeWrapped.removeListener('foo', fooListener);
+
+        ee.emit('foo');
+
+        expect(fooEmitted).to.equal(false);
+
+        expect(eeWrapped._listeners.length).to.equal(0);
+    });
+
+    it('[EventEmitterWrapper] should allow an `on` event listener to be removed', function() {
+        var ee = new EventEmitter();
+
+        var eeWrapped = listenerTracker.wrap(ee);
+
+        expect(eeWrapped._listeners.length).to.equal(0);
+
+        var fooEmitted = false;
+
+        function fooListener() {
+            fooEmitted = true;
+        }
+
+        eeWrapped.on('foo', fooListener);
+
+        expect(eeWrapped._listeners.length).to.equal(1);
+
+
+        eeWrapped.removeListener('foo', fooListener);
+
+        ee.emit('foo');
+
+        expect(fooEmitted).to.equal(false);
+
+        expect(eeWrapped._listeners.length).to.equal(0);
+    });
+
 });
