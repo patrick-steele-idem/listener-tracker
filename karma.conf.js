@@ -12,11 +12,9 @@ module.exports = function(config) {
         bundlingEnabled: false,
         resolveCssUrls: true,
         cacheProfile: 'development',
-        // 2. tempdir is the directory where all the generated files will be stored.
         tempdir: './.test'
     },
 
-    // reporters configuration
     reporters: ['mocha'],
 
     plugins: [
