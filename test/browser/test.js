@@ -15,11 +15,16 @@ var createEvent = function(type) {
 var wrapped;
 var output;
 var TEST = "test";
+var ONCE = "once";
 var MESSAGE = "works";
-var OUTPUT = [MESSAGE];
+var OUTPUT = [MESSAGE, ONCE];
 var event = createEvent(TEST);
+var onceEvent = createEvent(ONCE);
 var testFunc = function() {
     output.push(MESSAGE);
+};
+var onceFunc = function() {
+    output.push(ONCE);
 };
 
 describe('Non EventEmitter Suite' , function() {
@@ -27,10 +32,18 @@ describe('Non EventEmitter Suite' , function() {
         output = [];
         wrapped = listenerTracker.wrap(window);
         wrapped.on(TEST, testFunc);
+        wrapped.once(ONCE, onceFunc);
         window.dispatchEvent(event);
+        window.dispatchEvent(onceEvent);
     });
 
     it('tests on', function() {
+        expect(output).to.eql(OUTPUT);
+    });
+
+    it('tests once', function() {
+        expect(output).to.eql(OUTPUT);
+        window.dispatchEvent(onceEvent);
         expect(output).to.eql(OUTPUT);
     });
 
