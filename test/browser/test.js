@@ -14,15 +14,20 @@ var createEvent = function(type) {
 };
 
 describe('client listener' , function() {
+    var wrapped;
+    var output;
+    var event = createEvent("test");
+
+    beforeEach(function() {
+      output = [];
+    });
+
     it('run', function() {
         expect(4).to.equal(4);
     });
 
-    it('test', function() {
-        var event = createEvent("test");
-        var wrapped = listenerTracker.wrap(window);
-
-        var output = [];
+    it('test on with window', function() {
+        wrapped = listenerTracker.wrap(window);
 
         wrapped.on('test', function() {
             output.push('works');
@@ -31,6 +36,13 @@ describe('client listener' , function() {
         window.dispatchEvent(event);
 
         expect(output).to.eql(['works']);
+    });
+
+    it('test removeListener with window', function() {
+        wrapped.removeAllListeners('test');
+        window.dispatchEvent(event);
+
+        expect(output).to.eql([]);
     });
 
     it('event', function() {
