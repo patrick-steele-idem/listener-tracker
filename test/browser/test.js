@@ -4,7 +4,6 @@
 var chai = require('chai');
 chai.config.includeStack = true;
 var expect = chai.expect;
-var EventEmitter = require('events').EventEmitter;
 var listenerTracker = require('./../..');
 
 var createEvent = function(type) {
@@ -13,55 +12,41 @@ var createEvent = function(type) {
     return event;
 };
 
-var addListener = function(target, type, listener) {
-  target.on(type, listener);
-};
-
 var wrapped;
 var output;
+var TEST = "test";
+var MESSAGE = "works";
+var OUTPUT = [MESSAGE];
+var event = createEvent(TEST);
 var testFunc = function() {
-    output.push('works');
+    output.push(MESSAGE);
 };
 
-describe('client listener' , function() {
+describe('Non EventEmitter Suite' , function() {
     beforeEach(function() {
         output = [];
         wrapped = listenerTracker.wrap(window);
-    });
-
-    it('run', function() {
-        expect(4).to.equal(4);
-    });
-
-    it('test on with window', function() {
-        var event = createEvent("test");
-        addListener(wrapped, 'test', testFunc);
+        wrapped.on(TEST, testFunc);
         window.dispatchEvent(event);
-
-        expect(output).to.eql(['works']);
     });
 
-    it('test removeListeners for event with window', function() {
-        var event = createEvent("test2");
-        addListener(wrapped, 'test2', testFunc);
+    it('tests on', function() {
+        expect(output).to.eql(OUTPUT);
+    });
+
+    it('tests removeListeners for event', function() {
+        expect(output).to.eql(OUTPUT);
+
+        wrapped.removeAllListeners(TEST);
         window.dispatchEvent(event);
-        expect(output).to.eql(['works']);
-        output = [];
+        expect(output).to.eql(OUTPUT);
+    });
 
-        wrapped.removeAllListeners('test2');
+    it('tests removeListeners', function() {
+        expect(output).to.eql(OUTPUT);
+
+        wrapped.removeAllListeners();
         window.dispatchEvent(event);
-        expect(output).to.eql([]);
-    });
-
-    it('test removeListeners with window', function() {
-        // addListener(wrapped, 'test', testFunc);
-        // window.dispatchEvent(event);
-        //
-        // expect(output).to.eql(['works']);
-    });
-
-    it('event', function() {
-        var e = createEvent('resize');
-        expect(e).to.not.equal(null);
+        expect(output).to.eql(OUTPUT);
     });
 });
