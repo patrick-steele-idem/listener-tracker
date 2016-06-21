@@ -37,7 +37,7 @@
     "phantomjs-prebuilt": "^2.1.7",
     "watchify": "^3.7.0"
   },
-  "license": "Apache License v2.0",
+  "license": "Apache-2.0",
   "main": "lib/listener-tracker.js",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
