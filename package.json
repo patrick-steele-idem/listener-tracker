@@ -11,7 +11,8 @@
     "url": "https://github.com/raptorjs/listener-tracker.git"
   },
   "scripts": {
-    "test": "node_modules/.bin/mocha --ui bdd --reporter spec ./test && node_modules/.bin/jshint lib/",
+    "test": "npm run test-server && npm run test-client && jshint lib/",
+    "test-server": "mocha --ui bdd --reporter spec ./test",
     "test-client": "node_modules/karma/bin/karma start"
   },
   "author": "Patrick Steele-Idem <pnidem@gmail.com>",
@@ -25,12 +26,15 @@
     "jshint": "^2.5.0",
     "karma": "^0.13.22",
     "karma-browserify": "^5.0.5",
+    "karma-chai": "^0.1.0",
     "karma-lasso": "^2.0.0",
     "karma-mocha": "^1.0.1",
     "karma-mocha-reporter": "^2.0.4",
+    "karma-phantomjs-launcher": "^1.0.0",
     "lasso": "^2.5.3",
     "lasso-require": "^1.8.0",
     "mocha": "^2.1.0",
+    "phantomjs-prebuilt": "^2.1.7",
     "watchify": "^3.7.0"
   },
   "license": "Apache License v2.0",
