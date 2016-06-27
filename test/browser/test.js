@@ -20,6 +20,7 @@ var ONCE = "once";
 var MESSAGE = "works";
 var OUTPUT = [MESSAGE, ONCE];
 var event = createEvent(TEST);
+var domNodeRemoved = createEvent("DOMNodeRemovedFromDocument");
 var onceEvent = createEvent(ONCE);
 var testFunc = function() {
     output.push(MESSAGE);
@@ -63,6 +64,14 @@ describe('Non EventEmitter Wrap Suite' , function() {
         window.dispatchEvent(event);
         expect(output).to.eql(OUTPUT);
     });
+
+    it('tests the destroy listener', function() {
+        expect(output).to.eql(OUTPUT);
+        // destroy listener is added by default
+        window.dispatchEvent(domNodeRemoved);
+        window.dispatchEvent(event);
+        expect(output).to.eql(OUTPUT);
+    });
 });
 
 describe('Non EventEmitter Tracker Suite' , function() {
@@ -89,6 +98,14 @@ describe('Non EventEmitter Tracker Suite' , function() {
         expect(output).to.eql(OUTPUT);
 
         tracker.removeAllListeners();
+        window.dispatchEvent(event);
+        expect(output).to.eql(OUTPUT);
+    });
+
+    it('tests the destroy listener', function() {
+        expect(output).to.eql(OUTPUT);
+        // destroy listener is added by default
+        window.dispatchEvent(domNodeRemoved);
         window.dispatchEvent(event);
         expect(output).to.eql(OUTPUT);
     });
