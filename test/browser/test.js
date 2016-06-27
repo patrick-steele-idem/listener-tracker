@@ -15,6 +15,8 @@ var createEvent = function(type) {
 var wrapped;
 var output;
 var tracker;
+var paragraphEl = document.createElement("p");
+document.getElementsByTagName("body")[0].appendChild(paragraphEl);
 var TEST = "test";
 var ONCE = "once";
 var MESSAGE = "works";
@@ -32,11 +34,11 @@ var onceFunc = function() {
 describe('Non EventEmitter Wrap Suite' , function() {
     beforeEach(function() {
         output = [];
-        wrapped = listenerTracker.wrap(window);
+        wrapped = listenerTracker.wrap(paragraphEl);
         wrapped.on(TEST, testFunc);
         wrapped.once(ONCE, onceFunc);
-        window.dispatchEvent(event);
-        window.dispatchEvent(onceEvent);
+        paragraphEl.dispatchEvent(event);
+        paragraphEl.dispatchEvent(onceEvent);
     });
 
     it('tests on', function() {
@@ -45,7 +47,7 @@ describe('Non EventEmitter Wrap Suite' , function() {
 
     it('tests once', function() {
         expect(output).to.eql(OUTPUT);
-        window.dispatchEvent(onceEvent);
+        paragraphEl.dispatchEvent(onceEvent);
         expect(output).to.eql(OUTPUT);
     });
 
@@ -53,7 +55,7 @@ describe('Non EventEmitter Wrap Suite' , function() {
         expect(output).to.eql(OUTPUT);
 
         wrapped.removeAllListeners(TEST);
-        window.dispatchEvent(event);
+        paragraphEl.dispatchEvent(event);
         expect(output).to.eql(OUTPUT);
     });
 
@@ -61,15 +63,16 @@ describe('Non EventEmitter Wrap Suite' , function() {
         expect(output).to.eql(OUTPUT);
 
         wrapped.removeAllListeners();
-        window.dispatchEvent(event);
+        paragraphEl.dispatchEvent(event);
         expect(output).to.eql(OUTPUT);
     });
 
     it('tests the destroy listener', function() {
         expect(output).to.eql(OUTPUT);
-        // destroy listener is added by default
-        window.dispatchEvent(domNodeRemoved);
-        window.dispatchEvent(event);
+        // destroy listener is added by default, so just need to remove
+        // to fire event
+        paragraphEl.remove();
+        paragraphEl.dispatchEvent(event);
         expect(output).to.eql(OUTPUT);
     });
 });
