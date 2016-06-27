@@ -14,6 +14,7 @@ var createEvent = function(type) {
 
 var wrapped;
 var output;
+var tracker;
 var TEST = "test";
 var ONCE = "once";
 var MESSAGE = "works";
@@ -27,7 +28,7 @@ var onceFunc = function() {
     output.push(ONCE);
 };
 
-describe('Non EventEmitter Suite' , function() {
+describe('Non EventEmitter Wrap Suite' , function() {
     beforeEach(function() {
         output = [];
         wrapped = listenerTracker.wrap(window);
@@ -47,7 +48,7 @@ describe('Non EventEmitter Suite' , function() {
         expect(output).to.eql(OUTPUT);
     });
 
-    it('tests removeListeners for event', function() {
+    it('tests removeAllListeners for event', function() {
         expect(output).to.eql(OUTPUT);
 
         wrapped.removeAllListeners(TEST);
@@ -55,10 +56,39 @@ describe('Non EventEmitter Suite' , function() {
         expect(output).to.eql(OUTPUT);
     });
 
-    it('tests removeListeners', function() {
+    it('tests removeAllListeners', function() {
         expect(output).to.eql(OUTPUT);
 
         wrapped.removeAllListeners();
+        window.dispatchEvent(event);
+        expect(output).to.eql(OUTPUT);
+    });
+});
+
+describe('Non EventEmitter Tracker Suite' , function() {
+    beforeEach(function() {
+        output = [];
+        tracker = listenerTracker.createTracker();
+        tracker.subscribeTo(window).on(TEST, testFunc);
+        tracker.subscribeTo(window).once(ONCE, onceFunc);
+        window.dispatchEvent(event);
+        window.dispatchEvent(onceEvent);
+    });
+
+    it('tests on', function() {
+        expect(output).to.eql(OUTPUT);
+    });
+
+    it('tests once', function() {
+        expect(output).to.eql(OUTPUT);
+        window.dispatchEvent(onceEvent);
+        expect(output).to.eql(OUTPUT);
+    });
+
+    it('tests removeAllListeners for event', function() {
+        expect(output).to.eql(OUTPUT);
+
+        tracker.removeAllListeners();
         window.dispatchEvent(event);
         expect(output).to.eql(OUTPUT);
     });
