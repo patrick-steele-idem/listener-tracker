@@ -1,4 +1,4 @@
-/* globals document, window */
+/* globals document, window, describe, beforeEach, it */
 'use strict';
 
 var chai = require('chai');
@@ -21,8 +21,7 @@ var TEST = "test";
 var ONCE = "once";
 var MESSAGE = "works";
 var OUTPUT = [MESSAGE, ONCE];
-var event = createEvent(TEST);
-var domNodeRemoved = createEvent("DOMNodeRemovedFromDocument");
+var testEvent = createEvent(TEST);
 var onceEvent = createEvent(ONCE);
 var testFunc = function() {
     output.push(MESSAGE);
@@ -37,7 +36,7 @@ describe('Non EventEmitter Wrap Suite' , function() {
         wrapped = listenerTracker.wrap(paragraphEl);
         wrapped.on(TEST, testFunc);
         wrapped.once(ONCE, onceFunc);
-        paragraphEl.dispatchEvent(event);
+        paragraphEl.dispatchEvent(testEvent);
         paragraphEl.dispatchEvent(onceEvent);
     });
 
@@ -55,7 +54,7 @@ describe('Non EventEmitter Wrap Suite' , function() {
         expect(output).to.eql(OUTPUT);
 
         wrapped.removeAllListeners(TEST);
-        paragraphEl.dispatchEvent(event);
+        paragraphEl.dispatchEvent(testEvent);
         expect(output).to.eql(OUTPUT);
     });
 
@@ -63,16 +62,7 @@ describe('Non EventEmitter Wrap Suite' , function() {
         expect(output).to.eql(OUTPUT);
 
         wrapped.removeAllListeners();
-        paragraphEl.dispatchEvent(event);
-        expect(output).to.eql(OUTPUT);
-    });
-
-    it('tests the destroy listener', function() {
-        expect(output).to.eql(OUTPUT);
-        // destroy listener is added by default, so just need to remove
-        // to fire event
-        paragraphEl.remove();
-        paragraphEl.dispatchEvent(event);
+        paragraphEl.dispatchEvent(testEvent);
         expect(output).to.eql(OUTPUT);
     });
 });
@@ -83,7 +73,7 @@ describe('Non EventEmitter Tracker Suite' , function() {
         tracker = listenerTracker.createTracker();
         tracker.subscribeTo(window).on(TEST, testFunc);
         tracker.subscribeTo(window).once(ONCE, onceFunc);
-        window.dispatchEvent(event);
+        window.dispatchEvent(testEvent);
         window.dispatchEvent(onceEvent);
     });
 
@@ -101,15 +91,7 @@ describe('Non EventEmitter Tracker Suite' , function() {
         expect(output).to.eql(OUTPUT);
 
         tracker.removeAllListeners();
-        window.dispatchEvent(event);
-        expect(output).to.eql(OUTPUT);
-    });
-
-    it('tests the destroy listener', function() {
-        expect(output).to.eql(OUTPUT);
-        // destroy listener is added by default
-        window.dispatchEvent(domNodeRemoved);
-        window.dispatchEvent(event);
+        window.dispatchEvent(testEvent);
         expect(output).to.eql(OUTPUT);
     });
 });
