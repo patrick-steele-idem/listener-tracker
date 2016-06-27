@@ -6,4 +6,6 @@
 /*.sublime-workspace
 *.orig
 .DS_Store
+.cache
+.test
 coverage
