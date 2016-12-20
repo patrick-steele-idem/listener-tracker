@@ -290,9 +290,9 @@ describe('listener-tracker' , function() {
             output.push('bar-wrapped');
         });
 
-        expect(wrapped._listeners.length).to.equal(2);
+        expect(wrapped.$__listeners.length).to.equal(2);
         ee.emit('destroy');
-        expect(wrapped._listeners.length).to.equal(0);
+        expect(wrapped.$__listeners.length).to.equal(0);
     });
 
     it('should handle destroy for multiple emitters', function() {
@@ -320,9 +320,9 @@ describe('listener-tracker' , function() {
                 output.push('ee2:bar-wrapped');
             });
 
-        expect(tracker._subscribeToList.length).to.equal(2);
+        expect(tracker.$__subscribeToList.length).to.equal(2);
         ee1.emit('destroy');
-        expect(tracker._subscribeToList.length).to.equal(1);
+        expect(tracker.$__subscribeToList.length).to.equal(1);
 
     });
 
@@ -377,21 +377,21 @@ describe('listener-tracker' , function() {
         var ee = new EventEmitter();
         var removed = false;
 
-        expect(tracker._subscribeToList.length).to.equal(0);
+        expect(tracker.$__subscribeToList.length).to.equal(0);
 
         tracker.subscribeTo(ee, { addDestroyListener: false })
             .once('removed', function() {
                 removed = true;
             });
 
-        expect(tracker._subscribeToList.length).to.equal(1);
+        expect(tracker.$__subscribeToList.length).to.equal(1);
         expect(removed).to.equal(false);
 
         ee.emit('removed');
 
         expect(removed).to.equal(true);
 
-        expect(tracker._subscribeToList.length).to.equal(0);
+        expect(tracker.$__subscribeToList.length).to.equal(0);
     });
 
     it('[EventEmitterWrapper] should do proper cleanup for a `once` event', function() {
@@ -399,7 +399,7 @@ describe('listener-tracker' , function() {
 
         var eeWrapped = listenerTracker.wrap(ee);
 
-        expect(eeWrapped._listeners.length).to.equal(0);
+        expect(eeWrapped.$__listeners.length).to.equal(0);
 
         var fooEmitted = false;
 
@@ -407,11 +407,11 @@ describe('listener-tracker' , function() {
             fooEmitted = true;
         });
 
-        expect(eeWrapped._listeners.length).to.equal(1);
+        expect(eeWrapped.$__listeners.length).to.equal(1);
 
         ee.emit('foo');
 
-        expect(eeWrapped._listeners.length).to.equal(0);
+        expect(eeWrapped.$__listeners.length).to.equal(0);
     });
 
     it('[EventEmitterWrapper] should allow a `once` event listener to be removed', function() {
@@ -419,7 +419,7 @@ describe('listener-tracker' , function() {
 
         var eeWrapped = listenerTracker.wrap(ee);
 
-        expect(eeWrapped._listeners.length).to.equal(0);
+        expect(eeWrapped.$__listeners.length).to.equal(0);
 
         var fooEmitted = false;
 
@@ -429,7 +429,7 @@ describe('listener-tracker' , function() {
 
         eeWrapped.once('foo', fooListener);
 
-        expect(eeWrapped._listeners.length).to.equal(1);
+        expect(eeWrapped.$__listeners.length).to.equal(1);
 
 
         eeWrapped.removeListener('foo', fooListener);
@@ -438,7 +438,7 @@ describe('listener-tracker' , function() {
 
         expect(fooEmitted).to.equal(false);
 
-        expect(eeWrapped._listeners.length).to.equal(0);
+        expect(eeWrapped.$__listeners.length).to.equal(0);
     });
 
     it('[EventEmitterWrapper] should allow an `on` event listener to be removed', function() {
@@ -446,7 +446,7 @@ describe('listener-tracker' , function() {
 
         var eeWrapped = listenerTracker.wrap(ee);
 
-        expect(eeWrapped._listeners.length).to.equal(0);
+        expect(eeWrapped.$__listeners.length).to.equal(0);
 
         var fooEmitted = false;
 
@@ -456,7 +456,7 @@ describe('listener-tracker' , function() {
 
         eeWrapped.on('foo', fooListener);
 
-        expect(eeWrapped._listeners.length).to.equal(1);
+        expect(eeWrapped.$__listeners.length).to.equal(1);
 
 
         eeWrapped.removeListener('foo', fooListener);
@@ -465,7 +465,7 @@ describe('listener-tracker' , function() {
 
         expect(fooEmitted).to.equal(false);
 
-        expect(eeWrapped._listeners.length).to.equal(0);
+        expect(eeWrapped.$__listeners.length).to.equal(0);
     });
 
 });
